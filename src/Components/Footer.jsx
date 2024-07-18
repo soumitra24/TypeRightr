@@ -8,7 +8,7 @@ export default function Footer(){
                 </div>
 
                 <div className="credit">
-                    <span>&copy; Soumitra Kumar</span>
+                    <span>&copy;Soumitra Kumar</span>
                 </div>
                 
             </div>

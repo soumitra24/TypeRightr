@@ -37,7 +37,7 @@ export default function Header() {
                 setTypingSpeed(100);
             } else if (index === text.length && !isDeleting) {
                 setIsDeleting(true);
-                setTypingSpeed(1000); // Pause before deleting
+                setTypingSpeed(1000); 
             } else if (index === 0 && isDeleting) {
                 setIsDeleting(false);
                 setTypingSpeed(500); 
@@ -86,11 +86,11 @@ export default function Header() {
                                 },
                                 placeholder: (styles) => ({
                                     ...styles,
-                                    color: theme.font, // Set the placeholder color here
+                                    color: theme.font, 
                                 }),
                                 input: (styles) => ({
                                     ...styles,
-                                    color: theme.font, // Set the placeholder color here
+                                    color: theme.font, 
                                 }), 
                             }}
                         />

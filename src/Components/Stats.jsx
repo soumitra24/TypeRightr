@@ -22,9 +22,12 @@ export default function Stats({ wpm,
                     <div className="title">WPM</div>
                     <div className="subtitle">{wpm}</div>
                     <div className="title">Accuracy</div>
-                    <div className="subtitle">{accuracy}</div>
-                    <div className="title">Characters</div>
-                    <div className="subtitle">{correctChars}/{incorrectChars}/{missedChars}/{extraChars}</div>
+                    <div className="subtitle">{accuracy}%</div>
+                    <div className="title">Characters Typed</div>
+                    <div className="subtitle" id="charstats">Correct Chars: {correctChars}<br/>
+                                                            Incorrect Chars: {incorrectChars}<br/>
+                                                            Missed Chars: {missedChars}
+                                                            </div>
 
                 </div>
                 <div className="graph">

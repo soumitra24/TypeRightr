@@ -23,7 +23,7 @@ const WineTheme = {
     background: "#ff0084",
     backgroundImage: 'linear-gradient(to right, #33001b, #ff0084)',
     font: 'white',
-    typeboxText: 'gray',
+    typeboxText: 'black',
     correctFont: 'white',
     cursor: '2px solid transparent',
     cursorColor: '2px solid white'

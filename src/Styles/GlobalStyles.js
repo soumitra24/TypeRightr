@@ -96,30 +96,37 @@ body{
     margin-left: 1rem;
     color: black;
     background-color: hsl(51, 100%, 50%);
-    width: 4.5rem;
-    height: 2.5rem;
+    width: 7rem;
+    height: 4rem;
     border: none;
     font-size: 20px;
     font-family: "sono", monospace;
     font-weight: 500;
     cursor: pointer;
     border-radius: 20px;
-    transition: all 0.2s linear;
+    transition: all 0.25s ease;
 
 }
 
 .timer-button:hover{
     background-color: hsl(51, 100%, 50%) ;
-    width: 4.65rem;
-    height: 2.6rem;
-    border-radius: 15px;
+    width: 9rem;
 }
 
 #play-again{
     font-size: 15px;
     border-radius: 10px;
-    width: 5rem;
+    width: 5.5rem;
+    height: 3.5rem;
     margin: 1.5rem;
+    padding: 10px;
+    transition: all 0.25s linear;
+}
+#play-again:hover{
+    font-size: 16px;
+    background-color: hsl(51, 100%, 50%) ;
+    width: 6.5rem;   
+    height: 3.7rem;
 }
 .type-Box{
     font-family: "Sono", monospace;
@@ -131,7 +138,7 @@ body{
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
-    color: grey;
+    color: ${({ theme }) => theme.typeboxText};
 }
 
 .words{
@@ -155,7 +162,8 @@ body{
 
 .start-button:hover{
     background-color: rgba(128, 128, 128, 0.479);
-    height: 2.2rem;
+    height: 2.5rem;
+    width: 3rem
         
 }
 
@@ -254,7 +262,7 @@ body{
     padding: 1rem;
 }
 .title{
-    font-size: 20px;
+    font-size: 25px;
     display:flex;
     justify-content: center;
     align-items: center;
@@ -266,6 +274,10 @@ body{
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
+}
+#charstats{
+    font-size: 20px;
+    margin-top: 5px;
 }
 
 .graph{
@@ -279,8 +291,7 @@ body{
 
 .footer{
     border-top: 1px solid ${({ theme }) => theme.correctFont};
-    padding-top: 1rem;
-    margin-top: 4rem;
+    margin-top: 8rem;
     margin-bottom: 2px;
     font-family: 'sono', monospace;
     display: flex;
@@ -302,11 +313,12 @@ body{
 }
 
 .links li{
-    font-size: 14px;
+    font-size: 17px;
+    margin: 0.5rem;
     list-style-type: none;
     text-align: left;
 }
 .credit{
-    padding-top: 1rem;
+    margin-top: 2.5rem;
 }
 `
