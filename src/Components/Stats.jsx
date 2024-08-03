@@ -1,4 +1,7 @@
+import { useEffect } from "react";
+import { auth, db } from "../FirebaseConfig";
 import Graph from "./Graph";
+import { toast, ToastContainer, Bounce } from "react-toastify"      
 export default function Stats({ wpm, 
                                 accuracy, 
                                 correctChars, 
@@ -15,6 +18,63 @@ export default function Stats({ wpm,
             return i;
         }
     })
+
+const pushtoDB = () =>{
+    const {uid} = auth.currentUser;
+    const resultRef = db.collection('Results');
+    resultRef.add({
+        wpm: wpm,
+        accuracy: accuracy,
+        correctChars: correctChars,
+        incorrectChars: incorrectChars,
+        missedChars: missedChars,
+        timeStamp: new Date(),
+        userId: uid
+    }).then((res)=>{
+        toast.success('Results Saved!!', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          })
+    }).catch((err)=>{
+        toast.error('Couldn\'t save the Results :(', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          })
+    })
+}
+
+useEffect(()=>{
+    if(auth.currentUser){
+        pushtoDB();
+    }
+    else{
+        toast.warning('Log In to save Results!!', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          })
+    }
+})
     return(
         <>
             <div className="results-box">

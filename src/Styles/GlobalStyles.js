@@ -47,6 +47,15 @@ body{
     margin-bottom: 2rem;
 }
 
+.utils{
+    display: flex;
+    flex-direction: row;
+    width: 30%;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 5px;
+}
+
 .timer{
     flex: 1;
     font-size: 2rem;
@@ -244,6 +253,7 @@ body{
 }
 
 .results-box{
+    color:  ${({ theme }) => theme.cursorColor};
     font-family: "sono", monospace;
     font-weight: 500;
     width: 70%;
@@ -321,4 +331,8 @@ body{
 .credit{
     margin-top: 2.5rem;
 }
+.logoutIcon{
+    cursor: pointer;
+}
+
 `

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { ThemeOptions } from "../Utils/Themes";
-import Select, {components} from "react-select";
+import Select, { components } from "react-select";
 import { useTheme } from "../Context/ThemeContext";
 import { FaCaretDown } from 'react-icons/fa';
+import AccountIcon from './AccountIcon'
+import LogoutIcon from '@mui/icons-material/Logout';
+import { auth } from "../FirebaseConfig";
+import {useAuthState} from 'react-firebase-hooks/auth'
+import { toast, ToastContainer, Bounce } from "react-toastify"      
 
 export default function Header() {
     const { setTheme, theme } = useTheme();
@@ -11,6 +16,8 @@ export default function Header() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [displayText, setDisplayText] = useState("");
     const [typingSpeed, setTypingSpeed] = useState(600);
+
+    const [user] = useAuthState(auth);
 
     const handleChange = (e) => {
         setTheme(e.value);
@@ -23,7 +30,7 @@ export default function Header() {
             </components.DropdownIndicator>
         );
     };
-    
+
 
     useEffect(() => {
         const type = () => {
@@ -37,10 +44,10 @@ export default function Header() {
                 setTypingSpeed(100);
             } else if (index === text.length && !isDeleting) {
                 setIsDeleting(true);
-                setTypingSpeed(1000); 
+                setTypingSpeed(1000);
             } else if (index === 0 && isDeleting) {
                 setIsDeleting(false);
-                setTypingSpeed(500); 
+                setTypingSpeed(500);
             }
         };
 
@@ -49,6 +56,32 @@ export default function Header() {
         return () => clearTimeout(timer);
     }, [index, isDeleting, text, typingSpeed]);
 
+    const logout = () =>{
+        auth.signOut().then((res) => {
+            toast.success('Successfully Logged Out!!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            }).catch((err)=>{
+                toast.error('An error occured!!', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+            })
+    }
+
     return (
         <>
             <div className="header">
@@ -56,7 +89,8 @@ export default function Header() {
                     <span className="typewriter">{displayText}</span>
                 </div>
                 <div className="utils">
-                    <div className="menuItems"></div>
+                    <AccountIcon/>
+                    {user && <LogoutIcon onClick={logout} className="logoutIcon"/>}
                     <div className="themeButtonClass">
                         <Select
                             placeholder={"Theme"}
@@ -73,7 +107,7 @@ export default function Header() {
                                 menu: (styles) => ({
                                     ...styles,
                                     backgroundColor: theme.background,
-                                    
+
                                 }),
                                 option: (styles, { isFocused }) => {
                                     return {
@@ -86,12 +120,12 @@ export default function Header() {
                                 },
                                 placeholder: (styles) => ({
                                     ...styles,
-                                    color: theme.font, 
+                                    color: theme.font,
                                 }),
                                 input: (styles) => ({
                                     ...styles,
-                                    color: theme.font, 
-                                }), 
+                                    color: theme.font,
+                                }),
                             }}
                         />
                     </div>
