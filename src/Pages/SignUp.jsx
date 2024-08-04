@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import '../Styles/signup.css';
 import { toast } from "react-toastify";
-import { auth } from "../FirebaseConfig";
+import { auth, db } from "../FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
@@ -47,12 +47,22 @@ const SignUp = () => {
     }
   }, [signupPassword, confirmPassword]);
 
+  const pushUsername = (userId) => {
+    const unameRef = db.collection('Uname');
+    unameRef.add({
+      userId: userId,
+      uname: signupUsername
+    });
+  };
+
   const handleSignUpSubmit = (e) => {
     e.preventDefault();
     if (!error) {
       auth.createUserWithEmailAndPassword(signupEmail, signupPassword)
-        .then(() => {
-                    toast.success('Account Created! Please Log In to Continue.', {
+        .then((userCredential) => {
+          const userId = userCredential.user.uid;
+          pushUsername(userId);
+          toast.success('Account Created! Please Log In to Continue.', {
             position: "bottom-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -62,7 +72,6 @@ const SignUp = () => {
             progress: undefined,
             theme: "light",
           });
-          
         })
         .catch(() => {
           toast.error('🦄 Try Again :(', {
@@ -78,13 +87,14 @@ const SignUp = () => {
         });
     }
   };
+
   const navigate = useNavigate();
+
   const handleLogInSubmit = (e) => {
     e.preventDefault();
     if (!error) {
       auth.signInWithEmailAndPassword(loginEmail, loginPassword)
         .then(() => {
-          
           toast.success('Logged In!!', {
             position: "bottom-right",
             autoClose: 5000,
@@ -147,6 +157,7 @@ const SignUp = () => {
                 placeholder="Username"
                 value={signupUsername}
                 onChange={(e) => setSignupUsername(e.target.value)}
+                required
               /><br />
               <input
                 type="email"
@@ -174,7 +185,6 @@ const SignUp = () => {
             </form>
           </div>
         )}
-        
       </div>
     </div>
   );

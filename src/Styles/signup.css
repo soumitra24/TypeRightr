@@ -107,3 +107,37 @@ form input:focus{
 .google span{
     margin-bottom: 1rem;
 }
+
+/* User Info */
+
+
+.Container{
+    border: 2px solid white;
+    padding: 0;
+    font-family: "sono", monospace;
+    height: 98vh;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    color: wheat;
+    overflow: hidden;
+}
+.head{
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+.head .icon{
+    position: absolute;
+    left:1rem;
+    top: 50%; transform: translateY(-50%);
+    cursor: pointer;
+}
+.Table{
+    margin-bottom: 5rem;
+    width: 50vw;
+    height: 20vh;
+    
+}

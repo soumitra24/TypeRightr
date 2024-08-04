@@ -20,10 +20,6 @@ ChartJS.register(
     Tooltip,
     Legend
 )
-
-
-
-
 export default function Graph({graphData}) {
     const {theme} = useTheme();
     const options = {

@@ -89,7 +89,9 @@ export default function Header() {
                     <span className="typewriter">{displayText}</span>
                 </div>
                 <div className="utils">
-                    <AccountIcon/>
+                    <div className="accIcon">
+                        <AccountIcon/>
+                    </div>
                     {user && <LogoutIcon onClick={logout} className="logoutIcon"/>}
                     <div className="themeButtonClass">
                         <Select
