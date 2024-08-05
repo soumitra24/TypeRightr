@@ -65,7 +65,7 @@ export default function GraphUname({ graphData }) {
     };
 
     return (
-        <div className="graph-data" style={{height: "50vh", width: "50vw", display:"flex", justifyContent:"center"}}>
+        <div className="graph-data" style={{Height: "50vh", width: "50vw", display:"flex", justifyContent:"center"}}>
             <Line
                 className='Graph'
                 data={data}

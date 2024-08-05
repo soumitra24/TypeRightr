@@ -7,9 +7,9 @@ export const GlobalStyles = createGlobalStyle`
 }
 
 body{
+    background-image: ${({ theme }) => theme.backgroundImage};
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.font};
-    background-image: ${({ theme }) => theme.backgroundImage};
     margin: 0;
     padding: 0;
     transition: all 0.25s linear;
@@ -50,7 +50,7 @@ body{
 .utils{
     display: flex;
     flex-direction: row;
-    width: 30%;
+    width: 20%;
     align-items: center;
     justify-content: space-evenly;
     padding: 5px;
@@ -104,7 +104,7 @@ body{
 .timer-button{
     margin-left: 1rem;
     color: black;
-    background-color: hsl(51, 100%, 50%);
+    background-color: wheat;
     width: 7rem;
     height: 4rem;
     border: none;
@@ -118,7 +118,6 @@ body{
 }
 
 .timer-button:hover{
-    background-color: hsl(51, 100%, 50%) ;
     width: 9rem;
 }
 
@@ -224,7 +223,7 @@ body{
     width: 70%;
     margin-left: auto;
     margin-right: auto;
-    height: 4rem;
+    height: 5rem;
     padding: 10px;
 }
 
@@ -250,6 +249,9 @@ body{
   content: "";
   border-right: 0.15em solid orange;
   animation: blink-caret 0.75s step-end infinite;
+}
+.accIcon{
+    padding-top: 1.5rem;
 }
 
 .results-box{
@@ -300,7 +302,7 @@ body{
 }
 
 .footer{
-    border-top: 1px solid ${({ theme }) => theme.correctFont};
+    border-top: 1px solid wheat;
     margin-top: 8rem;
     margin-bottom: 2px;
     font-family: 'sono', monospace;
@@ -316,7 +318,7 @@ body{
 .links a{
     text-decoration: none;
     transition: all 0.5s ease;
-    color: ${({ theme }) => theme.correctFont};
+    color: ${({ theme }) => theme.font};
 }
 .links a:hover{
     opacity: 0.6;

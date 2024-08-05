@@ -3,11 +3,11 @@ import { ThemeOptions } from "../Utils/Themes";
 import Select, { components } from "react-select";
 import { useTheme } from "../Context/ThemeContext";
 import { FaCaretDown } from 'react-icons/fa';
-import AccountIcon from './AccountIcon'
+import AccountIcon from './AccountIcon';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { auth } from "../FirebaseConfig";
-import {useAuthState} from 'react-firebase-hooks/auth'
-import { toast, ToastContainer, Bounce } from "react-toastify"      
+import { auth, db } from "../FirebaseConfig";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { toast } from "react-toastify";
 
 export default function Header() {
     const { setTheme, theme } = useTheme();
@@ -16,13 +16,14 @@ export default function Header() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [displayText, setDisplayText] = useState("");
     const [typingSpeed, setTypingSpeed] = useState(600);
-
     const [user] = useAuthState(auth);
+    const [uname, setUname] = useState("");
 
     const handleChange = (e) => {
         setTheme(e.value);
         localStorage.setItem("theme", JSON.stringify(e.value));
     };
+
     const DropdownIndicator = (props) => {
         return (
             <components.DropdownIndicator {...props}>
@@ -30,7 +31,6 @@ export default function Header() {
             </components.DropdownIndicator>
         );
     };
-
 
     useEffect(() => {
         const type = () => {
@@ -56,8 +56,22 @@ export default function Header() {
         return () => clearTimeout(timer);
     }, [index, isDeleting, text, typingSpeed]);
 
-    const logout = () =>{
-        auth.signOut().then((res) => {
+    useEffect(() => {
+        const fetchUname = async () => {
+            if (user) {
+                const unameRef = db.collection('Uname');
+                const snapshot = await unameRef.where('userId', '==', user.uid).get();
+                if (!snapshot.empty) {
+                    const userDoc = snapshot.docs[0].data();
+                    setUname(userDoc.uname);
+                }
+            }
+        };
+        fetchUname();
+    }, [user]);
+
+    const logout = () => {
+        auth.signOut().then(() => {
             toast.success('Successfully Logged Out!!', {
                 position: "top-right",
                 autoClose: 5000,
@@ -67,19 +81,19 @@ export default function Header() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-              });
-            }).catch((err)=>{
-                toast.error('An error occured!!', {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                  });
-            })
+            });
+        }).catch(() => {
+            toast.error('An error occured!!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        });
     }
 
     return (
@@ -90,9 +104,10 @@ export default function Header() {
                 </div>
                 <div className="utils">
                     <div className="accIcon">
-                        <AccountIcon/>
+                        <AccountIcon />
+                       {(user) ? (<span>{uname}</span>) : (<span>Log In</span>)}
                     </div>
-                    {user && <LogoutIcon onClick={logout} className="logoutIcon"/>}
+                    {user && <LogoutIcon onClick={logout} className="logoutIcon" titleAccess="Log Out"/>}
                     <div className="themeButtonClass">
                         <Select
                             placeholder={"Theme"}
@@ -109,7 +124,6 @@ export default function Header() {
                                 menu: (styles) => ({
                                     ...styles,
                                     backgroundColor: theme.background,
-
                                 }),
                                 option: (styles, { isFocused }) => {
                                     return {

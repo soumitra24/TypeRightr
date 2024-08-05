@@ -11,6 +11,7 @@ const DarkTheme = {
 const LightTheme = {
     label: 'light',
     background: 'white',
+    backgroundImage: "linear-gradient(white, white)",
     font: 'black',
     typeboxText: 'gray',
     correctFont: 'black',
@@ -35,7 +36,7 @@ const BlueTheme = {
     backgroundImage: 'linear-gradient(to right, #141e30, #243b55)',
     font: 'white',
     typeboxText: 'gray',
-    correctFont: 'white',
+    correctFont: 'wheat',
     cursor: '2px solid transparent',
     cursorColor: '2px solid white'
 }
@@ -56,5 +57,5 @@ export const ThemeOptions = [
     {label: 'Light', value : LightTheme},
     {label: 'Wine', value: WineTheme},
     {label: 'Blue', value: BlueTheme},
-    {label: 'Pink', value: PinkTheme}
+    // {label: 'Pink', value: PinkTheme}
 ]

@@ -17,8 +17,8 @@ export default function AccountIcon() {
     }
     return(
         <>
-            <div className="accicon">
-                    <AccountCircleIcon sx={{ fontSize: 40 }} onClick={handleUserPages}/>
+            <div className="accicon" style={{cursor: "pointer"}}>
+                    <AccountCircleIcon sx={{ fontSize: 30 }} onClick={handleUserPages} />
             </div>
         </>
     )

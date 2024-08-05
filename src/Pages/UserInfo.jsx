@@ -6,7 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import { TableRow, TableCell, TableHead, Table, TableContainer, TableBody } from "@mui/material";
 import GraphUname from "../Components/GraphUPage";
-import HomeIcon from '@mui/icons-material/Home';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useTheme } from '../Context/ThemeContext';
+
+
 
 const UserInfo = () => {
     const [data, setData] = useState(null);
@@ -14,14 +17,15 @@ const UserInfo = () => {
     const [user, loading] = useAuthState(auth);
     const [graphData, setGraphData] = useState([]);
     
+    const {theme} = useTheme();
     const navigate = useNavigate();
+    let tempData = [];
+    
 
     const fetchUserData = () => {
         const resultsRef = db.collection('Results');
         const unameRef = db.collection('Uname');
         const { uid } = auth.currentUser;
-        console.log("UID: ", uid); 
-        let tempData = [];
         let tempGraphData = [];
 
         resultsRef.where('userId', '==', uid).get().then((snapshot) => {
@@ -29,10 +33,9 @@ const UserInfo = () => {
                 const docData = doc.data();
                 tempData.push(docData);
                 tempGraphData.push({
-                    date: docData.timeStamp.toDate().toLocaleString(),
+                    date: docData.timeStamp.toDate().toLocaleDateString(),
                     wpm: docData.wpm
                 });
-                console.log("Graph Data Entry: ", tempGraphData[tempGraphData.length - 1]);
             });
             
             if (tempData.length > 0) {
@@ -65,14 +68,14 @@ const UserInfo = () => {
     const navi = () =>{
         navigate('/typingtest');
     }
-    const tableStyle = { color: "wheat", textAlign: "center", fontSize: 25, border: "2px solid wheat" };
+    const tableStyle = { color: theme.correctFont, textAlign: "center", fontSize: 25, border: "2px solid" };
 
     return (
         <>
-            <div className="Body">
-                <div className="Container">
+            <div className="Body" style={{backgroundColor: theme.background, backgroundImage: theme.backgroundImage}}>
+                <div className="Container" style={{color: theme.correctFont}}>
                     <div className="head">
-                        <HomeIcon className="icon" onClick={navi} fontSize="large"/>
+                        <ArrowBackIosNewIcon className="icon" onClick={navi} fontSize="large" />
                         <h1>Heyyy, {uname}</h1>
                     </div>
                     {data && (
@@ -95,7 +98,7 @@ const UserInfo = () => {
                                             <TableCell style={tableStyle}>{data.wpm}</TableCell>
                                             <TableCell style={tableStyle}>{data.accuracy}%</TableCell>
                                             <TableCell style={tableStyle}>{data.correctChars} / {data.incorrectChars} / {data.missedChars}</TableCell>
-                                            <TableCell style={tableStyle}>{data.timeStamp.toDate().toLocaleString()}</TableCell>
+                                            <TableCell style={tableStyle}>{data.timeStamp.toDate().toLocaleDateString()}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -105,7 +108,8 @@ const UserInfo = () => {
                         
                     )}
                     <div className="graph">
-                                <GraphUname graphData={graphData} />
+                            {(tempData.length > 0) ? (<GraphUname graphData={graphData} />) : (<h1>Let's Play our First Game</h1>)}
+                                
                     </div>
                 </div>
             </div>

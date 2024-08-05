@@ -30,18 +30,6 @@ const pushtoDB = () =>{
         missedChars: missedChars,
         timeStamp: new Date(),
         userId: uid
-    }).then((res)=>{
-        toast.success('Results Saved!!', {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          })
     }).catch((err)=>{
         toast.error('Couldn\'t save the Results :(', {
             position: "bottom-right",
