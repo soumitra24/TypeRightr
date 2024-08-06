@@ -34,7 +34,7 @@ export const Router = () => {
       <ToastContainer />
       <Suspense fallback={<CircularProgress />}>
         <Routes>
-          <Route path="typingtest/" element={
+          <Route path="/" element={
             <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
               <Home />
             </motion.div>
