@@ -55,24 +55,62 @@ const SignUp = () => {
     });
   };
 
+  const handlesignUpSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        const response = await fetch('path_to_your_php_backend/signup.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                email: signupEmail,
+                username: signupUsername,
+                password: signupPassword,
+                confirmPassword: confirmPassword,
+            }),
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            toast.success(result.message);
+            handleMode1();  // Switch to login mode if sign-up is successful
+        } else {
+            toast.error(result.message);
+        }
+    } catch (error) {
+        toast.error('An error occurred during sign-up');
+    }
+};
+
+
   const handleSignUpSubmit = (e) => {
     e.preventDefault();
     if (!error) {
       auth.createUserWithEmailAndPassword(signupEmail, signupPassword)
-        .then((userCredential) => {
-          const userId = userCredential.user.uid;
-          pushUsername(userId);
-          toast.success('Account Created! Please Log In to Continue.', {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        })
+      .then((userCredential) => {
+        const userId = userCredential.user.uid;
+        pushUsername(userId);
+        toast.success('Account Created! Please Log In to Continue.', {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      
+        // Delay the transition slightly so the user can see the toast
+        setTimeout(() => {
+          setLoginEmail(signupEmail);     // Pre-fill the login form
+          handleMode1();                  // Switch to login mode
+        }, 1000); // 1 second delay for smooth UX
+      })
+      
         .catch(() => {
           toast.error('🦄 Try Again :(', {
             position: "bottom-right",
@@ -105,7 +143,7 @@ const SignUp = () => {
             progress: undefined,
             theme: "light",
           });
-          navigate('/typingtest');
+          navigate('/');
         })
         .catch(() => {
           toast.error('🦄 Wrong Credentials!!', {
@@ -125,67 +163,37 @@ const SignUp = () => {
   return (
     <div className="Body">
       <div className="Form">
-        <div className="mods">
-          <button onClick={handleMode1} className={mode ? 'selected' : ''}>Log In</button>
-          <button onClick={handleMode2} className={!mode ? 'selected' : ''}>Sign Up</button>
-        </div>
-        {mode ? (
-          <div className="LogIn">
-            <form onSubmit={handleLogInSubmit}>
-              <input
-                type="email"
-                placeholder="Email ID"
-                required
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-              /><br />
-              <input
-                type="password"
-                placeholder="Password"
-                required
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              /><br />
-              <button className="submit" type="submit">Submit</button>
-            </form>
-          </div>
-        ) : (
-          <div className="SignUp">
-            <form onSubmit={handleSignUpSubmit}>
-              <input
-                type="text"
-                placeholder="Username"
-                value={signupUsername}
-                onChange={(e) => setSignupUsername(e.target.value)}
-                required
-              /><br />
-              <input
-                type="email"
-                placeholder="Email ID"
-                value={signupEmail}
-                onChange={(e) => setSignupEmail(e.target.value)}
-                required
-              /><br />
-              <input
-                type="password"
-                placeholder="Password"
-                value={signupPassword}
-                onChange={(e) => setSignupPassword(e.target.value)}
-                required
-              /><br />
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              /><br />
-              <div className={`error-message ${error ? 'visible' : ''}`}>{error}</div>
-              <button className="submit" type="submit">Submit</button>
-            </form>
-          </div>
-        )}
+  <div className="mods">
+    <button onClick={handleMode1} className={mode ? 'selected' : ''}>Log In</button>
+    <button onClick={handleMode2} className={!mode ? 'selected' : ''}>Sign Up</button>
+  </div>
+
+  <div className="transition-wrapper">
+    <div className={`form-container ${mode ? 'show' : 'hide'}`}>
+      <div className="LogIn">
+        <form onSubmit={handleLogInSubmit}>
+          <input type="email" placeholder="Email ID" required value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} /><br />
+          <input type="password" placeholder="Password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} /><br />
+          <button className="submit" type="submit">Submit</button>
+        </form>
       </div>
+    </div>
+
+    <div className={`form-container ${!mode ? 'show' : 'hide'}`}>
+      <div className="SignUp">
+        <form onSubmit={handleSignUpSubmit}>
+          <input type="text" placeholder="Username" value={signupUsername} onChange={(e) => setSignupUsername(e.target.value)} required /><br />
+          <input type="email" placeholder="Email ID" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required /><br />
+          <input type="password" placeholder="Password" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required /><br />
+          <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required /><br />
+          <div className={`error-message ${error ? 'visible' : ''}`}>{error}</div>
+          <button className="submit" type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 };

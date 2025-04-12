@@ -4,22 +4,14 @@ import 'firebase/compat/firestore';
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-
-    apiKey: "AIzaSyBUYh9RQQLzc2PD1wLNP9N0Q9h4k59kYsY",
-  
-    authDomain: "typerightr-240bb.firebaseapp.com",
-  
-    projectId: "typerightr-240bb",
-  
-    storageBucket: "typerightr-240bb.appspot.com",
-  
-    messagingSenderId: "895649925548",
-  
-    appId: "1:895649925548:web:202cff11bc7121ef315209",
-  
-    measurementId: "G-ZN48WD3EJ2"
-  
-  };
+  apiKey: "AIzaSyBwn-nayo8-Jp5gQ-7GzTIWd9f80Uh-Orw",
+  authDomain: "typingtest-4fa70.firebaseapp.com",
+  projectId: "typingtest-4fa70",
+  storageBucket: "typingtest-4fa70.firebasestorage.app",
+  messagingSenderId: "127803567495",
+  appId: "1:127803567495:web:41088d9e2cfaf27661b722",
+  measurementId: "G-T924XYQKNP"
+};
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();

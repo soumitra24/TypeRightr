@@ -58,7 +58,7 @@ const UserInfo = () => {
             fetchUserData();
         }
         if (!loading && !user) {
-            navigate('/typingtest');
+            navigate('/');
         }
     }, [loading]);
 
@@ -66,7 +66,7 @@ const UserInfo = () => {
         return <CircularProgress />;
     }
     const navi = () =>{
-        navigate('/typingtest');
+        navigate('/');
     }
     const tableStyle = { color: theme.correctFont, textAlign: "center", fontSize: 25, border: "2px solid" };
 
@@ -108,7 +108,7 @@ const UserInfo = () => {
                         
                     )}
                     <div className="graph">
-                            {(tempData.length > 0) ? (<GraphUname graphData={graphData} />) : (<h1>Let's Play our First Game</h1>)}
+                            {(tempData.length > 0) ? (<GraphUname graphData={graphData} />) : (<h1>:)</h1>)}
                                 
                     </div>
                 </div>
