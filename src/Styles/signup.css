@@ -147,26 +147,26 @@ form input:focus{
     overflow: hidden;
   }
   
-  .form-container {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    pointer-events: none;
-  }
-  
-  .form-container.show {
-    opacity: 1;
-    transform: translateY(0px);
-    pointer-events: all;
-  }
-  
-  .form-container.hide {
-    opacity: 0;
-    transform: translateY(20px);
-    pointer-events: none;
-  }
+.form-container {
+position: absolute;
+width: 100%;
+top: 0;
+left: 0;
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.5s ease, transform 0.5s ease;
+pointer-events: none;
+}
+
+.form-container.show {
+opacity: 1;
+transform: translateY(0px);
+pointer-events: all;
+}
+
+.form-container.hide {
+opacity: 0;
+transform: translateY(20px);
+pointer-events: none;
+}
   

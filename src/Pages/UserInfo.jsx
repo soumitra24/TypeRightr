@@ -69,7 +69,7 @@ const UserInfo = () => {
         navigate('/');
     }
     const tableStyle = { color: theme.correctFont, textAlign: "center", fontSize: 25, border: "2px solid" };
-
+    console.log(tempData.length);
     return (
         <>
             <div className="Body" style={{backgroundColor: theme.background, backgroundImage: theme.backgroundImage}}>
@@ -107,9 +107,10 @@ const UserInfo = () => {
                         </div>
                         
                     )}
+                    
                     <div className="graph">
-                            {(tempData.length > 0) ? (<GraphUname graphData={graphData} />) : (<h1>:)</h1>)}
-                                
+                        <h2>Your progress</h2>
+                        {(graphData.length > 0) ? (<GraphUname graphData={graphData} />) : (<h1>No typing data available yet</h1>)}
                     </div>
                 </div>
             </div>

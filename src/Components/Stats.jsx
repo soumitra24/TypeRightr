@@ -1,87 +1,53 @@
-import { useEffect } from "react";
-import { auth, db } from "../FirebaseConfig";
-import Graph from "./Graph";
-import { toast, ToastContainer, Bounce } from "react-toastify"      
-export default function Stats({ wpm, 
-                                accuracy, 
-                                correctChars, 
-                                incorrectChars,
-                                missedChars,
-                                extraChars,
-                                graphData})
+import React from 'react';
+import Graph from './Graph';
+import { useTheme } from '../Context/ThemeContext';
 
-{
+// Add showGraph prop, default to true
+export default function Stats({ wpm, accuracy, correctChars, incorrectChars, missedChars, extraChars, graphData, showGraph = true }) {
+    const { theme } = useTheme();
+
+    // Filter graph data to ensure unique time entries (can be done here or before passing)
     let timeSet = new Set();
-    const newGraph = graphData.filter(i=>{
-        if(!timeSet.has(i[0])){
+    const newGraph = graphData.filter(i => {
+        if (!timeSet.has(i[0])) {
             timeSet.add(i[0]);
-            return i;
+            return true;
         }
-    })
+        return false;
+    });
 
-const pushtoDB = () =>{
-    const {uid} = auth.currentUser;
-    const resultRef = db.collection('Results');
-    resultRef.add({
-        wpm: wpm,
-        accuracy: accuracy,
-        correctChars: correctChars,
-        incorrectChars: incorrectChars,
-        missedChars: missedChars,
-        timeStamp: new Date(),
-        userId: uid
-    }).catch((err)=>{
-        toast.error('Couldn\'t save the Results :(', {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          })
-    })
-}
-
-useEffect(()=>{
-    if(auth.currentUser){
-        pushtoDB();
-    }
-    else{
-        toast.warning('Log In to save Results!!', {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          })
-    }
-})
-    return(
-        <>
-            <div className="results-box">
-                <div className="stats">
-                    <div className="title">WPM</div>
-                    <div className="subtitle">{wpm}</div>
-                    <div className="title">Accuracy</div>
-                    <div className="subtitle">{accuracy}%</div>
-                    <div className="title">Characters Typed</div>
-                    <div className="subtitle" id="charstats">Correct Chars: {correctChars}<br/>
-                                                            Incorrect Chars: {incorrectChars}<br/>
-                                                            Missed Chars: {missedChars}
-                                                            </div>
-
-                </div>
-                <div className="graph">
-                    <Graph graphData = {newGraph}/>
+    return (
+        // Use flexbox for layout
+        <div className="results-box" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+            <div className="stats">
+                <div className="title">WPM</div>
+                <div className="subtitle">{wpm}</div>
+                <div className="title">Accuracy</div>
+                <div className="subtitle">{accuracy}%</div>
+                <div id="charstats">
+                    Correct Characters: {correctChars} <br />
+                    Incorrect Characters: {incorrectChars} <br />
+                    Missed Characters: {missedChars} <br />
+                    Extra Characters: {extraChars}
                 </div>
             </div>
-        </>
+            {/* Conditionally render the graph */}
+            {showGraph && newGraph.length > 0 && (
+                <div className="graph">
+                    <Graph graphData={newGraph} theme={theme} />
+                </div>
+            )}
+            {/* Optional: Message if graph is hidden or has no data */}
+            {showGraph && newGraph.length === 0 && (
+                 <div className="graph-placeholder" style={{ width: '65%', textAlign: 'center', color: theme.typeboxText }}>
+                    Graph data not available.
+                 </div>
+            )}
+             {!showGraph && (
+                 <div className="graph-placeholder" style={{ width: '65%', textAlign: 'center', color: theme.typeboxText }}>
+                    {/* Intentionally empty or add a small message if desired */}
+                 </div>
+            )}
+        </div>
     );
 }

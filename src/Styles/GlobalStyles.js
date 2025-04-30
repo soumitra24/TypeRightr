@@ -64,43 +64,7 @@ body{
     text-align: left ;
 }
 
-/* .timer-button {
-  font-size: 16px;
-  font-weight: 200;
-  letter-spacing: 1px;
-  padding: 13px 20px 13px;
-  margin: 2%;
-  outline: 0;
-  border: 1px solid white;
-  cursor: pointer;
-  position: relative;
-  background-color: rgba(0, 0, 0, 0);
-  user-select: none;
-  touch-action: manipulation;
-}
 
-.timer-button:after {
-  content: "";
-  background-color: #ffe54c;
-  width: 100%;
-  z-index: -1;
-  position: absolute;
-  height: 100%;
-  top: 7px;
-  left: 7px;
-  transition: 0.2s;
-}
-
-.timer-button:hover:after {
-  top: 0px;
-  left: 0px;
-}
-
-@media (min-width: 768px) {
-  .timer-button {
-    padding: 13px 50px 13px;
-  }
-} */
 .timer-button{
     margin-left: 1rem;
     color: black;
@@ -237,8 +201,7 @@ body{
 
 .typewriter {
   display: inline-block;
-  
-}
+  }
 
 @keyframes blink-caret {
   from, to { border-color: transparent; }
@@ -252,52 +215,88 @@ body{
 }
 .accIcon{
     padding-top: 1.5rem;
+    margin: 1rem 1rem;
+    transition: color 0.2s ease, transform 0.2s ease; /* Add transition for smooth hover */
+    vertical-align: middle; /* Align icon vertically if needed */
+}
+.accIcon:hover{
+  transform: scale(1.07);
+}
+// ... existing styles ...
+
+.logoutIcon {
+  cursor: pointer;
+  margin-right: 1rem; /* Apply the margin here */
+  color: ${({ theme }) => theme.font}; /* Use theme color */
+  transition: color 0.2s ease, transform 0.2s ease; /* Add transition for smooth hover */
+  vertical-align: middle; /* Align icon vertically if needed */
 }
 
-.results-box{
-    color:  ${({ theme }) => theme.cursorColor};
+.logoutIcon:hover { /* Change color on hover (e.g., to typeboxText or red) */
+  transform: scale(1.1);
+}
+.results-box {
+    color: ${({ theme }) => theme.font};
     font-family: "sono", monospace;
     font-weight: 500;
-    width: 70%;
+    width: 70%; /* Keep overall width */
     padding-top: 1rem;
     margin-left: auto;
     margin-right: auto;
-    display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Space between stats and graph */
+    align-items: flex-start;
+    flex-wrap: wrap; 
+    gap: 2rem;
 }
-
-
-.stats{
-    width: 35%; 
+.stats {
+    flex: 1 1 auto;
+    min-width: 200px;
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    text-align: center;
 }
-.title{
-    font-size: 25px;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 5px;
+.title {
+    font-size: 1.5rem; /* Use rem */
+    margin-bottom: 0.25rem;
 }
-.subtitle{
-    font-size: 25px;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
+
+.subtitle {
+    font-size: 1.5rem; /* Use rem */
+    margin-bottom: 1rem; /* Use rem */
+    font-weight: bold;
 }
 #charstats{
-    font-size: 20px;
-    margin-top: 5px;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    line-height: 1.5;
 }
 
 .graph{
-    width: 65%;
+    flex: 2 1 60%; 
+    min-width: 300px;
+}
+.graph-placeholder {
+    flex: 2 1 60%; /* Match graph flex properties */
+    min-width: 300px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px; /* Give it some minimum height */
+    color: ${({ theme }) => theme.font};
+    font-style: italic;
+}
+.opponent-results-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-top: 1.25rem; 
+    height: 50%;
 }
 
 .Graph{
-    height: 80%;
+    height: 90%;
     width: 100%;
 }
 
@@ -337,6 +336,47 @@ body{
     cursor: pointer;
 }
 
+.action-button {
+    font-family: "sono", monospace;
+    padding: 0.5em 1em; /* Adjust multiplier as needed */
+    margin: 0.9em 0.32rem;
+    background-color: transparent;
+    color: ${({ theme }) => theme.font};
+    border: 3px solid wheat;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transform-origin: center;
+    white-space: nowrap;
+}
+
+.action-button:hover {
+    transform: scale(1.05);
+}
+
+// Also style other elements like status messages, opponent progress, etc.
+.status-message {
+    font-family: "sono", monospace;
+    margin: 0.9375rem 0; /* 15px */
+    color: ${({ theme }) => theme.font};
+    font-size: clamp(1rem, 2vw + 0.5rem, 1.2rem);
+}
+
+.opponent-progress {
+    font-family: "sono", monospace;
+    margin-bottom: 0.625rem; /* 10px */
+    color: ${({ theme }) => theme.font}; // Use theme variable
+    text-align: center;
+}
+
+.multiplayer-container h2{
+    font-family: "sono", monospace;
+    color: ${({ theme }) => theme.font}; // Style heading with theme
+    text-align: center;
+    margin-bottom: 0.9375rem; 
+    font-size: clamp(1.5rem, 4vw + 1rem, 2rem);
+}
 
 
 `
