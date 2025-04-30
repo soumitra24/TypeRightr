@@ -4,7 +4,7 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 // Import the function from your Paragraphs file
 // Adjust the path relative to the server.cjs file!
-const { getRandomParagraph } = require('../src/Components/MultiplayerPara.jsx'); // <--- IMPORT
+const { getRandomParagraph } = require('./MultiplayerPara.jsx'); // <--- IMPORT
 
 const app = express();
 
