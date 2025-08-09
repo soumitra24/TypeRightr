@@ -12,19 +12,27 @@ export default function SocketContextProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Add logging to debug
         console.log("Initializing socket connection...");
-        
-        // Use environment variable for server URL or fallback to localhost
-        const socketURL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+
+        const socketURL =
+            import.meta.env.VITE_SOCKET_URL ||
+            (import.meta.env.DEV ? 'http://localhost:3001' : '');
+
+        if (!socketURL) {
+            console.error('VITE_SOCKET_URL is not set in production.');
+            setLoading(false);
+            return;
+        }
         console.log("Connecting to socket server at:", socketURL);
-        
+
         try {
             const socketConnection = io(socketURL, {
-                reconnectionDelay: 1000,
+                path: '/socket.io',                 // must match server
+                transports: ['websocket', 'polling'],
+                withCredentials: false,             // keep false unless you use cookies
                 reconnection: true,
                 reconnectionAttempts: 10,
-                transports: ['websocket', 'polling'],
+                reconnectionDelay: 1000,
             });
 
             socketConnection.on('connect', () => {

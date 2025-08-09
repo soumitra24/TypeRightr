@@ -3,7 +3,6 @@ import Paragraphs from "./Paragraphs";
 import UpperMenu from "./UpperMenu";
 import { useTestMode } from "../Context/TestTimerContext";
 import Stats from "./Stats";
-// Add these imports
 import { auth, db } from "../FirebaseConfig";
 import { toast } from "react-toastify";
 
@@ -35,7 +34,7 @@ export default function TypingBox() {
     const missedCharsRef = useRef(0);
     const extraCharsRef = useRef(0);
     const correctWordsRef = useRef(0);
-    const currWordIndexRef = useRef(0); // Ref for current word index
+    const currWordIndexRef = useRef(0);
 
     const wordSpanRef = useMemo(() => {
         return Array(wordsArray.length).fill(0).map(i => createRef(null));
