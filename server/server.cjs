@@ -5,30 +5,30 @@ const { Server } = require('socket.io');
 
 const app = express();
 
-// Allow your Vercel frontend
-const allowedOrigins = [
+// Allow origins via env (comma-separated)
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'https://typerightr.vercel.app' // Vercel frontend
-];
+].join(',')).split(',');
 
 // REST CORS
 app.use(cors({
   origin: allowedOrigins,
-  methods: ['GET','POST'],
+  methods: ['GET', 'POST'],
   credentials: false
 }));
 
-// Health check
+// Health
 app.get('/health', (_req, res) => res.status(200).send('ok'));
 
 const server = http.createServer(app);
 
-// Socket.IO CORS + path must match client
+// Socket.IO with same CORS + path
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
-    methods: ['GET','POST'],
+    methods: ['GET', 'POST'],
     credentials: false
   },
   path: '/socket.io'
