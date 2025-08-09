@@ -9,7 +9,7 @@ const { getRandomParagraph } = require('./MultiplayerPara.jsx'); // <--- IMPORT
 const app = express();
 
 // Configure CORS
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", "https://typerightr.vercel.app/", "https://type-rightr-server.vercel.app"];
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -31,8 +31,8 @@ const io = new Server(server, {
             "http://localhost:5173", 
             "http://127.0.0.1:5173",
             // Render.com deployment
-            "https://typerightr.onrender.com",
-            "https://typerightr-socketio.onrender.com"
+            "https://typerightr.vercel.app/",
+            "https://type-rightr-server.vercel.app"
         ],
         methods: ["GET", "POST"],
         credentials: true
