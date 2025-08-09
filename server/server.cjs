@@ -12,19 +12,16 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || [
   'https://typerightr.vercel.app' // Vercel frontend
 ].join(',')).split(',');
 
-// REST CORS
 app.use(cors({
   origin: allowedOrigins,
   methods: ['GET', 'POST'],
   credentials: false
 }));
 
-// Health
 app.get('/health', (_req, res) => res.status(200).send('ok'));
 
 const server = http.createServer(app);
 
-// Socket.IO with same CORS + path
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
@@ -34,48 +31,41 @@ const io = new Server(server, {
   path: '/socket.io'
 });
 
-const MULTIPLAYER_TIME = 30;
-const rooms = {};
+// --- Matchmaking state ---
+const rooms = {}; // { [roomId]: { players: [id1, id2], text?: string } }
+let waitingSocketId = null; // single waiting player
 
 io.on('connection', (socket) => {
-  console.log(`[socket] connected: ${socket.id}`);
+  console.log(`[socket] connected ${socket.id} via ${socket.conn.transport.name}`);
 
   socket.on('findMatch', () => {
-    console.log(`User ${socket.id} is looking for a match.`);
-    let joinedRoom = false;
+    console.log(`[match] ${socket.id} requested match`);
+    if (waitingSocketId && waitingSocketId !== socket.id && io.sockets.sockets.get(waitingSocketId)) {
+      // Pair with waiting player
+      const opponentId = waitingSocketId;
+      waitingSocketId = null;
 
-    for (const roomId in rooms) {
-      if (rooms[roomId] && rooms[roomId].players.length === 1) {
-        const roomTime = MULTIPLAYER_TIME; // Always 30s
-        socket.join(roomId);
-        rooms[roomId].players.push(socket.id);
-        console.log(`User ${socket.id} joined existing room ${roomId} (${roomTime}s).`);
+      const roomId = `room_${opponentId}_${socket.id}`;
+      socket.join(roomId);
+      io.sockets.sockets.get(opponentId)?.join(roomId);
+      rooms[roomId] = { players: [opponentId, socket.id] };
 
-        // Assign paragraph text using the imported function
-        rooms[roomId].text = getRandomParagraph(); // <--- USE IMPORTED FUNCTION
+      console.log(`[match] room ${roomId} with ${opponentId} & ${socket.id}`);
 
-        io.to(roomId).emit('matchFound', {
-          roomId,
-          players: rooms[roomId].players,
-          time: roomTime
-        });
-        io.to(roomId).emit('gameStart', {
-          text: rooms[roomId].text, // Send the fetched text
-          time: roomTime
-        });
-        console.log(`Game starting in room ${roomId} for ${roomTime}s`);
-        joinedRoom = true;
-        break;
-      }
-    }
-
-    if (!joinedRoom) {
-      const newRoomId = `room_${socket.id}`;
-      socket.join(newRoomId);
-      // No text needed until second player joins
-      rooms[newRoomId] = { players: [socket.id], text: null };
-      console.log(`User ${socket.id} created and joined new room ${newRoomId}`);
-      socket.emit('waitingForOpponent', { roomId: newRoomId });
+      io.to(roomId).emit('matchFound', {
+        roomId,
+        players: rooms[roomId].players,
+        time: 30
+      });
+      io.to(roomId).emit('gameStart', {
+        text: 'Start typing...', // TODO: plug your paragraph picker here
+        time: 30
+      });
+    } else {
+      // Put this socket in waiting queue
+      waitingSocketId = socket.id;
+      console.log(`[match] ${socket.id} waiting for opponent`);
+      socket.emit('waitingForOpponent', { roomId: null });
     }
   });
 
@@ -87,11 +77,8 @@ io.on('connection', (socket) => {
 
   socket.on('gameFinished', (data) => {
     if (data.roomId && rooms[data.roomId]) {
-      // <<< LOG RECEIVED EVENT >>>
       console.log(`[Server] Received 'gameFinished' from ${socket.id} in room ${data.roomId}. Stats:`, data.stats);
-      // Emit to OTHERS in the room
       socket.to(data.roomId).emit('opponentFinished', { userId: socket.id, stats: data.stats });
-      // <<< LOG EMITTED EVENT >>>
       console.log(`[Server] Emitted 'opponentFinished' to room ${data.roomId} for user ${socket.id}.`);
     } else {
       console.warn(`[Server] Received 'gameFinished' for invalid/unknown room: ${data.roomId}`);
@@ -100,31 +87,21 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', (reason) => {
     console.log(`User disconnected: ${socket.id}, Reason: ${reason}`);
-    let roomToDelete = null;
+    if (waitingSocketId === socket.id) waitingSocketId = null;
+
     for (const roomId in rooms) {
-      if (rooms[roomId]) {
-        const playerIndex = rooms[roomId].players.indexOf(socket.id);
-        if (playerIndex !== -1) {
-          console.log(`User ${socket.id} was in room ${roomId}`);
-          // Ensure room still exists before emitting
-          if (rooms[roomId]) {
-               socket.to(roomId).emit('opponentLeft');
-          }
-          roomToDelete = roomId;
-          break;
-        }
+      const r = rooms[roomId];
+      if (!r) continue;
+      const idx = r.players.indexOf(socket.id);
+      if (idx !== -1) {
+        socket.to(roomId).emit('opponentLeft');
+        delete rooms[roomId];
+        console.log(`[room] cleaned ${roomId}`);
       }
-    }
-    if (roomToDelete && rooms[roomToDelete]) {
-         console.log(`Removing room ${roomToDelete} due to disconnect`);
-         delete rooms[roomToDelete];
     }
   });
 });
 
-// Remove the local getRandomParagraph function if it exists here
-
-// Start
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server listening on ${PORT}`);

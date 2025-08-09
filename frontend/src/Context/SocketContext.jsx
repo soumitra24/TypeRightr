@@ -14,6 +14,7 @@ export default function SocketContextProvider({ children }) {
     useEffect(() => {
         console.log("Initializing socket connection...");
 
+        const rawURL = (import.meta.env.VITE_SOCKET_URL || (import.meta.env.DEV ? 'http://localhost:3001' : '')).replace(/\/$/, '');
         const socketURL =
             import.meta.env.VITE_SOCKET_URL ||
             (import.meta.env.DEV ? 'http://localhost:3001' : '');
@@ -26,13 +27,13 @@ export default function SocketContextProvider({ children }) {
         console.log("Connecting to socket server at:", socketURL);
 
         try {
-            const socketConnection = io(socketURL, {
-                path: '/socket.io',                 // must match server
+            const socketConnection = io(rawURL, {
+                path: '/socket.io',
                 transports: ['websocket', 'polling'],
-                withCredentials: false,             // keep false unless you use cookies
                 reconnection: true,
                 reconnectionAttempts: 10,
                 reconnectionDelay: 1000,
+                withCredentials: false
             });
 
             socketConnection.on('connect', () => {
