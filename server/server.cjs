@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const { getRandomParagraph } = require('./MultiplayerPara.js');
 
 const app = express();
 
@@ -52,15 +53,21 @@ io.on('connection', (socket) => {
 
       console.log(`[match] room ${roomId} with ${opponentId} & ${socket.id}`);
 
-      io.to(roomId).emit('matchFound', {
-        roomId,
-        players: rooms[roomId].players,
-        time: 30
-      });
-      io.to(roomId).emit('gameStart', {
-        text: 'Start typing...', // TODO: plug your paragraph picker here
-        time: 30
-      });
+      if (rooms[roomId]) {
+        const roomTime = 30; // or your configured time
+        rooms[roomId].text = getRandomParagraph();
+
+        io.to(roomId).emit('matchFound', {
+          roomId,
+          players: rooms[roomId].players,
+          time: roomTime
+        });
+
+        io.to(roomId).emit('gameStart', {
+          text: rooms[roomId].text,
+          time: roomTime
+        });
+      }
     } else {
       // Put this socket in waiting queue
       waitingSocketId = socket.id;
